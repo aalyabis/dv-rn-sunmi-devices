@@ -1,0 +1,6 @@
+rootProject.name = 'DvRnSunmiDevicesExample'
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app'
+
+include ':dvrnsunmidevices'
+project(':dvrnsunmidevices').projectDir = new File(rootProject.projectDir, '../../android')
