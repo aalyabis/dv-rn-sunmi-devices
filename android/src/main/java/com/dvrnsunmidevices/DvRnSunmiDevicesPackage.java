@@ -2,6 +2,7 @@ package com.dvrnsunmidevices;
 
 import androidx.annotation.NonNull;
 
+import com.dvrnsunmidevices.managers.BridgeManager;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -17,6 +18,7 @@ public class DvRnSunmiDevicesPackage implements ReactPackage {
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
         modules.add(new DvRnSunmiDevicesModule(reactContext));
+
         return modules;
     }
 
