@@ -12,6 +12,7 @@ import com.dvrnsunmidevices.utils.tasks.BitmapGeneratingAsyncTask;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 
 import java.io.IOException;
@@ -70,11 +71,7 @@ public class BridgeManager extends ReactContextBaseJavaModule implements BitmapG
       System.out.println(data);
       HardwareManager.getInstance().passCallback(promise);
       HardwareManager.getInstance().writeToNFCTag(tag,
-        HardwareManager.getInstance().generateTextToWriteNFC(
-          data.getString("user"),
-          data.getString("password"),
-          data.getString("domain"))
-      );
+        HardwareManager.getInstance().generateTextToWriteNFC(data));
     } catch (NullPointerException | IOException e) {
       promise.reject(e);
       e.printStackTrace();

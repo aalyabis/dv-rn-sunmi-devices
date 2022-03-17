@@ -3,10 +3,13 @@ package com.dvrnsunmidevices;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
-import android.os.Bundle;
-import android.util.Log;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +25,7 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableMapKeySetIterator;
-import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -69,8 +69,9 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
 
   @ReactMethod
   public void writeNFCTag(ReadableMap data, Promise promise) {
-    bridgeManager.writeNFCTag(data,tag, promise);
+    bridgeManager.writeNFCTag(data, tag, promise);
   }
+
 
   @Override
   public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
@@ -82,17 +83,14 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
     try {
       tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
       if (tag != null) {
-        String[] credentials = HardwareManager.getInstance().readTagData(tag);
-        WritableMap map = Arguments.createMap();
-        map.putString("user",credentials[0]);
-        map.putString("password",credentials[1]);
-        map.putString("domain",credentials[2]);
 
-        sendEvent(this.reactContext,CHIP_EVENT,map);
+        WritableMap credentials = HardwareManager.getInstance().readTagData(tag);
+        System.out.println("Output from Tag: " + credentials);
+        sendEvent(this.reactContext, CHIP_EVENT, credentials);
       }
     } catch (IOException e) {
-      sendEvent(this.reactContext,CHIP_EVENT,null);
       e.printStackTrace();
+      sendEvent(this.reactContext, CHIP_EVENT, null);
     }
   }
 
@@ -103,7 +101,6 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
       .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
       .emit(eventName, params);
   }
-
 
 
   @Override

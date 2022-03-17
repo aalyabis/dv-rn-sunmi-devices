@@ -12,14 +12,20 @@ import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
 import android.util.Log;
 
+import com.dvrnsunmidevices.BaseApp;
 import com.dvrnsunmidevices.utils.SunmiUtil;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 public class HardwareManager {
@@ -81,7 +87,6 @@ public class HardwareManager {
     if (ultralight == null) return;
     ultralight.connect();
     int pageNumber = 4;
-    // TODO :update
     for (String pageData : data) {
       ultralight.writePage(pageNumber, pageData.getBytes(Charset.forName("US-ASCII")));
       pageNumber++;
@@ -90,11 +95,17 @@ public class HardwareManager {
     promise.resolve("NFC chip data write completed");
   }
 
-  public List<String> generateTextToWriteNFC(String user, String password, String domain) {
+  public List<String> generateTextToWriteNFC(ReadableMap map) {
     int startIndex = 0;
     int endIndex = 4;
 
-    String textToWrite = user + ";" + password + ";" + domain + ";";
+    String textToWrite = "";
+
+    Iterator<Map.Entry<String, Object>> entryIterator = map.getEntryIterator();
+    while (entryIterator.hasNext()) {
+      Map.Entry<String, Object> nextEl = entryIterator.next();
+      textToWrite += nextEl.getKey() + ";" + nextEl.getValue() + ";";
+    }
 
     int textLen = textToWrite.length();
     int parts = textLen / 4;
@@ -127,43 +138,34 @@ public class HardwareManager {
     return partsToWrite;
   }
 
-  public String[] readTagData(Tag tagFromIntent) throws IOException {
+  public WritableMap readTagData(Tag tagFromIntent) throws IOException {
     MifareUltralight uTag = MifareUltralight.get(tagFromIntent);
-
-    String user = "";
-    String pwd = "";
-    String domain = "";
 
     uTag.connect();
 
-    byte[] data = uTag.readPages(4);
-    byte[] data2 = uTag.readPages(8);
-    byte[] data3 = uTag.readPages(12);
-    String text = new String(data, "UTF-8");
-    String text2 = new String(data2, "UTF-8");
-    String text3 = new String(data3, "UTF-8");
+    String finText = "";
+    for (int i = 1; i < 20; i++) {
+      byte[] data = uTag.readPages(4*i);
+      String text = new String(data, "UTF-8");
+      finText += text;
 
-    String finText = text + text2 + text3;
+    }
     List<String> result = Arrays.asList(finText.split(";"));
 
     int lineNum = 0;
-    for (String line : result) {
-      switch (lineNum) {
-        case 0:
-          user=line;
-        case 1:
-          pwd = line;
-          break;
-        case 2:
-          domain = line;
-          break;
-        default:
-          break;
-      }
+    WritableMap writableMap = Arguments.createMap();
 
+    String key = "";
+    for (String line : result) {
+      System.out.println("One line of result: " + line);
+      if (lineNum % 2 == 0) {
+        key = line;
+      } else {
+        writableMap.putString(key, line);
+      }
       lineNum++;
     }
     uTag.close();
-    return new String[]{user, pwd,domain};
+    return writableMap;
   }
 }
