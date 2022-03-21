@@ -7,6 +7,7 @@ import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
+import android.nfc.tech.MifareUltralight;
 import android.nfc.tech.Ndef;
 import android.nfc.tech.NdefFormatable;
 import android.widget.Toast;
@@ -90,6 +91,13 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
       }
     } catch (IOException e) {
       e.printStackTrace();
+    }finally {
+      try {
+        MifareUltralight uTag = MifareUltralight.get(tag);
+        uTag.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       sendEvent(this.reactContext, CHIP_EVENT, null);
     }
   }
