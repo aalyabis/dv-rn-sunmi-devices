@@ -8,8 +8,12 @@
 package com.dvrnsunmidevices.managers;
 
 import android.graphics.Bitmap;
+import android.nfc.FormatException;
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
 
 import com.dvrnsunmidevices.utils.SunmiUtil;
 import com.facebook.react.bridge.Arguments;
@@ -155,7 +159,7 @@ public class HardwareManager {
     uTag.connect();
 
     String finText = "";
-    for (int i = 1; i < 20; i++) {
+    for (int i = 1; i < 7; i++) {
       byte[] data = uTag.readPages(4 * i);
       String text = new String(data, "UTF-8");
       finText += text;
