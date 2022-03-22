@@ -1,6 +1,6 @@
 {
   "name": "dv-rn-sunmi-devices",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Module for controlling part of system functions of Sunmi T2 mini and P2 pro",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
