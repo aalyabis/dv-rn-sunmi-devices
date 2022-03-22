@@ -1,16 +1,13 @@
 package com.dvrnsunmidevices;
 
+import static com.dvrnsunmidevices.managers.HardwareManager.bytesToHex;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NdefFormatable;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,24 +80,28 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
   public void onNewIntent(Intent intent) {
     try {
       tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-      if (tag != null) {
 
-        WritableMap credentials = HardwareManager.getInstance().readTagData(tag);
-        System.out.println("Output from Tag: " + credentials);
-        sendEvent(this.reactContext, CHIP_EVENT, credentials);
+      WritableMap credentials = Arguments.createMap();
+      if (tag != null) {
+        if (MifareUltralight.get(tag) != null)
+          credentials = HardwareManager.getInstance().readTagData(tag);
+        credentials.putString("nfcId", bytesToHex(tag.getId()));
       }
+      sendEvent(this.reactContext, CHIP_EVENT, credentials);
+
     } catch (IOException e) {
       e.printStackTrace();
-    }finally {
       try {
         MifareUltralight uTag = MifareUltralight.get(tag);
-        uTag.close();
-      } catch (IOException e) {
-        e.printStackTrace();
+        if (uTag != null)
+          uTag.close();
+      } catch (IOException err) {
+        err.printStackTrace();
       }
       sendEvent(this.reactContext, CHIP_EVENT, null);
     }
   }
+
 
   private void sendEvent(ReactContext reactContext,
                          String eventName,
