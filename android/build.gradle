@@ -57,9 +57,10 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation 'com.izettle:html2bitmap:1.10'
-    implementation files('libs/core-3.3.0.jar')
+    // implementation files('libs/core-3.3.0.jar')
 
-    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])
+    // implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])
+    api 'com.google.zxing:core:3.3.3'
 
 
 }
