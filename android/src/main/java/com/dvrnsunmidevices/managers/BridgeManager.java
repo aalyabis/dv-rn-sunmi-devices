@@ -33,7 +33,7 @@ public class BridgeManager extends ReactContextBaseJavaModule implements BitmapG
     if (orientation == Configuration.ORIENTATION_PORTRAIT) {
       generator = new BitmapGeneratingAsyncTask(reactContext, html, 380, this, 150);
     } else {
-      generator = new BitmapGeneratingAsyncTask(reactContext, html, 580, this, 150);
+      generator = new BitmapGeneratingAsyncTask(reactContext, html, 380, this, 150);
     }
     generator.execute();
   }
