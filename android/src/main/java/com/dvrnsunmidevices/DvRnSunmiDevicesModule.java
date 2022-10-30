@@ -70,6 +70,11 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
     bridgeManager.writeNFCTag(data, tag, promise);
   }
 
+  @ReactMethod
+  public void openDrawer(Promise promise) {
+    bridgeManager.openDrawer(promise);
+  }
+
 
   @Override
   public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {

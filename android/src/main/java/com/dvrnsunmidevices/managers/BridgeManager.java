@@ -69,4 +69,10 @@ public class BridgeManager extends ReactContextBaseJavaModule implements BitmapG
     HardwareManager.getInstance().writeToNFCTag(tag,
       HardwareManager.getInstance().generateTextToWriteNFC(data));
   }
+
+  public void openDrawer(Promise promise) {
+    SunmiUtil.getInstance().passCallback(promise);
+    HardwareManager.getInstance().openDrawer();
+  }
+
 }

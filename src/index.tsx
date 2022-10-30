@@ -6,6 +6,7 @@ type SunmiPrinter ={
   printCustomHTMl: (htmlToConvert: string) => Promise<boolean>;
   showTwoLineText: (firstRow: string, secondRow: string) => Promise<boolean>;
   writeNFCTag: (data :ReadonlyMap<String, String>) => Promise<boolean>;
+  openDrawer: () => Promise<boolean>;
   CHIP_EVENT: "CHIP_LOADED"
 }
 
