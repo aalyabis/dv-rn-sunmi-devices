@@ -4,6 +4,7 @@ import static com.dvrnsunmidevices.managers.HardwareManager.bytesToHex;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.os.Build;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
