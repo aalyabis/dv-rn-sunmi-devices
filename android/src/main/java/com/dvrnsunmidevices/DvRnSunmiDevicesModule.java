@@ -141,8 +141,10 @@ public class DvRnSunmiDevicesModule extends ReactContextBaseJavaModule implement
   public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
     final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
     intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    int flags = 0;
+    if (Build.VERSION.SDK_INT >= 31) flags = 33554432;
 
-    final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+    final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, flags);
     if (adapter != null && adapter.isEnabled()) {
       adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
     }
